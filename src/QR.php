@@ -7,6 +7,8 @@ use BaconQrCode\Renderer\Image\{SvgImageBackEnd, ImagickImageBackEnd, EpsImageBa
 use BaconQrCode\Renderer\Eye\{SimpleCircleEye, SquareEye, CompositeEye, ModuleEye, EyeInterface};
 use BaconQrCode\Renderer\Module\{DotsModule, RoundnessModule};
 use BaconQrCode\Renderer\RendererStyle\{RendererStyle, Fill};
+use BaconQrCode\Common\ErrorCorrectionLevel;
+use BaconQrCode\Encoder\Encoder;
 use BaconQrCode\Writer;
 use Larc\QrCodeGen\Output;
 use Larc\QrCodeGen\Common\Base64;
@@ -26,7 +28,7 @@ final class QR
 	 * @param int|integer $size   Tamaño del QR. Default: 500
 	 * @param int|integer $margin Margen del QR. Defatul: 1
 	 */
-	function __construct( Object $data, int $size = 300, int $margin = 1 )
+	function __construct( Object $data, int $size = 500, int $margin = 1 )
 	{
 		$this->data 	= $data->getData();
 		$this->size		= $size;
@@ -97,12 +99,23 @@ final class QR
 
 		switch ( $destination ) {
 			case 'S':
-				return Base64::encode( $writer->writeString( $this->data ), $this->extension );
-				break;
+				$content = $writer->writeString(
+					$this->data,
+					Encoder::DEFAULT_BYTE_MODE_ECODING,
+					ErrorCorrectionLevel::L()
+				);
+
+				return Base64::encode( $content, $this->extension );
+			break;
 
 			case 'F':
-				$writer->writeFile( $this->data, $filename . $this->extension );
-				break;
+				$writer->writeFile(
+					$this->data,
+					$filename . $this->extension,
+					Encoder::DEFAULT_BYTE_MODE_ECODING,
+					ErrorCorrectionLevel::L()
+				);
+			break;
 		}
 	}
 }

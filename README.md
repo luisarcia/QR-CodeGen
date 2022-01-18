@@ -1,13 +1,9 @@
-# QRCodeGen v1.0
-🇵🇦 Permite generar códigos QR con diversos formatos, Wifi, Teléfono, Whatsapp, FaceTime, SMS, etc. 
+# QRCodeGen v1.1
+Permite generar códigos QR con diversos formatos, Wifi, Teléfono, Whatsapp, FaceTime, SMS, etc.
 
-🇺🇸 It allows you to generate QR codes with various formats, Wifi, Telephone, WhatsApp, FaceTime, SMS, etc.
 
-🇵🇦 Basado en bacon/bacon-qr-code
 
-🇺🇸 Based on bacon/bacon-qr-code
-
-## Instalación / Install
+## Instalación
 
 ```bash
 composer require larc/qrcodegen
@@ -15,11 +11,14 @@ composer require larc/qrcodegen
 
 
 
-## Tipos de data permitidos / Types of data allowed
+## Tipos de data permitidos
 
 #### Wifi
 
 ```php
+use Larc\QrCodeGen\QR;
+use Larc\QrCodeGen\DataType\Wifi;
+
 $wifi = new Wifi();
 $wifi->setAuthType( Wifi::WPA ); //Wifi::WEP | WIFI::WPA | WIFI::WPA2EAP | WIFI::NOPASS
 $wifi->setSsid( 'NOMBRE DE LA RED / NETWORK NAME' );
@@ -36,6 +35,9 @@ $qr->Output();
 #### Whatsapp
 
 ```php
+use Larc\QrCodeGen\QR;
+use Larc\QrCodeGen\DataType\Whatsapp;
+
 $whatsapp = new Whatsapp();
 $whatsapp->setTel('+50760001000');
 $whatsapp->setMessage('Hello World!');
@@ -50,6 +52,9 @@ $qr->Output();
 #### Facetime ( Only Apple Device )
 
 ```php
+use Larc\QrCodeGen\QR;
+use Larc\QrCodeGen\DataType\Facetime;
+
 $facetime = new Facetime();
 $facetime->setContact('usuario@example.com');
 $facetime->setType(Facetime::AUDIO); //Facetime::AUDIO | Facetime::VIDEO
@@ -65,6 +70,9 @@ $qr->Output();
 #### Telephone
 
 ```php
+use Larc\QrCodeGen\QR;
+use Larc\QrCodeGen\DataType\Tel;
+
 $tel = new Tel();
 $tel->setNumber('60001000');
 
@@ -78,6 +86,9 @@ $qr->Output();
 #### SMS
 
 ```php
+use Larc\QrCodeGen\QR;
+use Larc\QrCodeGen\DataType\Sms;
+
 $sms = new Sms();
 $sms->setTel('60001000');
 $sms->setMessage('Hello World!');
@@ -92,6 +103,9 @@ $qr->Output();
 #### Email
 
 ```php
+use Larc\QrCodeGen\QR;
+use Larc\QrCodeGen\DataType\Email;
+
 $email = new Email();
 $email->setAddress('luis.arcia@example.com');
 
@@ -105,6 +119,9 @@ $qr->Output();
 **URL**
 
 ```php
+use Larc\QrCodeGen\QR;
+use Larc\QrCodeGen\DataType\Url;
+
 $url = new Url();
 $url->setUrl('https://google.com');
 
@@ -118,6 +135,9 @@ $qr->Output();
 #### Text
 
 ```php
+use Larc\QrCodeGen\QR;
+use Larc\QrCodeGen\DataType\Text;
+
 $text = new Text();
 $text->setText('Hello World!');
 
@@ -128,10 +148,32 @@ $qr->Output();
 
 
 
-## FORMATO / FORMAT
+#### vCard
 
-🇵🇦 Estos son los formatos de salida: jpg, png, svg y eps
-🇺🇸 These are the output formats: jpg, png, svg y eps
+```php
+use Larc\QrCodeGen\QR;
+use Larc\QrCodeGen\DataType\vCard;
+
+$vCard = new vCard();
+$vCard->addName('Primer_nombre', 'Segundo_nombre', 'Primer_apellido', 'Segundo_apellido');
+$vCard->addNickname('The Boss');
+$vCard->addEMail('example@mail.com', 'WORK');
+$vCard->addPhoneNumber('60000000', 'PREF;WORK;VOICE');
+$vCard->addCompany('Company, S.A.');
+$vCard->addJobTitle('CEO');
+$vCard->addUrl('https://www.example.com', 'WORK');
+
+$qr = new QR( $vCard );
+$qr->toPNG();
+$qr->Output();
+```
+
+
+
+## FORMATO DE SALIDA
+
+Estos son los formatos de salida: jpg, png, svg y eps
+
 
 #### Ejemplo / Example:
 
@@ -159,11 +201,9 @@ $qr->Output();
 
 
 
-## Salida / Output
+## Salida
 
-🇵🇦 Utilizar el método **output()** después de instanciar la clase **QR**:
-
-🇺🇸 Use the **output()** method after instantiating the **QR** class
+Utilizar el método **output()** después de instanciar la clase **QR**:
 
 **Output( [destination], [filename] )**
 
@@ -176,7 +216,7 @@ Destination::FILE //Guarda el archivo en directorio / Save the file in directory
 Destination::STRING_RETURN //Devuelve data en string / Returns data in string. DEFAULT
 ```
 
-#### Ejemplo / Example:
+#### Ejemplo:
 
 ```php
 use Larc\QrCodeGen\Output\Destination;
@@ -196,9 +236,7 @@ $qr->Output(Destination::FILE, __DIR.__.'/name_file');
 
 ## Nota / Note
 
-🇵🇦 Se estarán agregando más tipo de data para convertir a QR.
-
-🇺🇸 More data types will be added to convert to QR.
+Se estarán agregando más tipo de data para convertir a QR.
 
 
 
